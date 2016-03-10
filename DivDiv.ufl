@@ -1,0 +1,44 @@
+# Copyright (C) 2015 Stefano Zampini
+#
+# This file is part of DOLFIN.
+#
+# DOLFIN is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# DOLFIN is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with DOLFIN. If not, see <http://www.gnu.org/licenses/>.
+#
+# First added:  2015-08-24
+# Last changed: 2015-08-24
+#
+# The bilinear form a(u, v) and linear form L(v) for
+# a div-div model problem.
+#
+# Compile this form with FFC: ffc -l dolfin DivDiv.ufl.
+
+cell       = tetrahedron
+#element    = FiniteElement("RT", cell, 1)
+# The BDDC preconditioner used by the example is insensitive to the order or the choice of the div-conforming space
+#element    = FiniteElement("RT", cell, 2)
+#element    = FiniteElement("BDM", cell, 2)
+element_L  = FiniteElement("Lagrange", cell, 1)
+
+# Function Spaces
+u = TrialFunction(element_L)
+v = TestFunction(element_L)
+f = Constant(cell)
+g = Constant(cell)
+k = Constant(cell)
+
+#a = inner(div(u),div(v))*dx + inner(u,v)*dx
+#L = inner(f,v)*dx
+
+a = (inner(grad(u), grad(v)) - v*k*u)*dx
+L = g*v*ds + f*v*dx
